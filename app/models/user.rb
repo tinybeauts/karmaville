@@ -18,14 +18,19 @@ class User < ActiveRecord::Base
             :uniqueness => {:case_sensitive => false}
 
   def self.by_karma
-    joins(:karma_points).group('users.id').order('SUM(karma_points.value) DESC')
+    order('karma_sum DESC')
+    # joins(:karma_points).group('users.id').order('SUM(karma_points.value) DESC')
   end
 
   def total_karma
-    self.karma_points.sum(:value)
+    self.karma_sum
   end
 
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def calculate_karma_sum
+    self.update_attribute(:karma_sum, self.karma_points.sum(:value))
   end
 end
