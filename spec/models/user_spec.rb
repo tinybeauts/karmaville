@@ -30,6 +30,18 @@ describe User do
     end
   end
 
+  describe '.page' do
+    it 'should group users into pages with 50 users per page' do
+      first = create(:user_with_karma, :total => 500, :points => 2)
+      second = create(:user_with_karma, :total => 500, :points => 2)
+      
+      5.times do
+        create(:user_with_karma, :total => 500, :points => 2)
+      end
+      User.page(2).should eq [first, second]
+    end
+  end
+
   describe '#total_karma' do
     let(:user) { create(:user_with_karma, :total => 500, :points => 2) }
 
